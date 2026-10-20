@@ -1,5 +1,5 @@
 from pathlib import Path
-from scipy.stats import mannwhitneyu
+from scipy.stats import mannwhitneyu, spearmanr
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -258,12 +258,12 @@ m4.metric("CATEGORIES", f"{filtered['category'].nunique()}")
 # --------------------------------------------------
 # TABS
 # --------------------------------------------------
-overview, categories_tab, timing_tab, features_tab = st.tabs([
+overview, categories_tab, timing_tab, features_tab,findings_tab = st.tabs([
     "◈ Overview",
     "▥ Categories",
     "◷ Publishing",
-    "⌁ Article Features"
-    "✦ Findings"
+    "⌁ Article Features",
+    "✦ Findings",
 ])
 
 PLOT_LAYOUT = dict(
@@ -446,11 +446,6 @@ with features_tab:
         "The filtered dataset determines this statistic."
     )
 
-st.divider()
-st.caption(
-    "PULSE · EDAV COURSE-END PROJECT | "
-    "Historical observational data; findings are not causal claims."
-)
 # --------------------------------------------------
 # FINDINGS & STATISTICAL EVIDENCE
 # --------------------------------------------------
@@ -545,9 +540,7 @@ with findings_tab:
         pair = filtered[[col, "shares"]].dropna()
 
         if len(pair) >= 3 and pair[col].nunique() > 1:
-            rho, p = pair.corr(method="spearman").iloc[0, 1], (
-                pair[col].corr(pair["shares"], method="spearman")
-            )
+            rho, p = spearmanr(pair[col], pair["shares"])
 
             association_rows.append({
                 "Feature": col,
@@ -575,3 +568,13 @@ with findings_tab:
         "Correlations describe associations. P-values are not adjusted "
         "for multiple comparisons, so interpret them cautiously."
     )
+
+
+# --------------------------------------------------
+# FOOTER
+# --------------------------------------------------
+st.divider()
+st.caption(
+    "PULSE · EDAV COURSE-END PROJECT | "
+    "Historical observational data; findings are not causal claims."
+)
