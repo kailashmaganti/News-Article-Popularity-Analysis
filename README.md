@@ -108,8 +108,3 @@ This dataset contains historical observational data from Mashable. Statistical a
 
 Detailed findings, numerical results, and visualizations will be documented after validating the completed analysis.
 
-## Author
-
-**Kailash Maganti**
-
-EDAV Course-End Project
